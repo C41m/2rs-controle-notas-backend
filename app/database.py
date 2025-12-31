@@ -11,15 +11,18 @@ engine = create_async_engine(
     settings.DATABASE_URL,
     echo=True,
     future=True,
-    connect_args={"statement_cache_size": 0}
+    pool_pre_ping=True,
+    connect_args={
+        "prepared_statement_cache_size": 0,  # Desativa o cache de statements preparados
+        "statement_cache_size": 0,  # Garante que o asyncpg não cacheie nada
+    },
 )
 
 # Cria sessionmaker assíncrono
 AsyncSessionLocal = async_sessionmaker(
-    bind=engine,
-    class_=AsyncSession,
-    expire_on_commit=False
+    bind=engine, class_=AsyncSession, expire_on_commit=False
 )
+
 
 async def get_db():
     async with AsyncSessionLocal() as session:
