@@ -1,35 +1,20 @@
-# Usa Python 3.13 (compatível com seu ambiente)
+# Usar a mesma versão do Python que você usa localmente
 FROM python:3.13-slim
 
-# Evita cache de arquivos .pyc e bufferização
-ENV PYTHONUNBUFFERED=1 \
-    PYTHONDONTWRITEBYTECODE=1
-
-# Instala apenas o necessário (gcc para compilar extensões do asyncpg)
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    gcc \
-    && rm -rf /var/lib/apt/lists/*
-
-# Diretório da aplicação
+# Definir diretório de trabalho
 WORKDIR /app
 
-# Copia requirements primeiro (otimiza cache do build)
+# Copiar apenas arquivos de dependência primeiro (cache otimizado)
 COPY requirements.txt .
 
-# Instala dependências — só o que você precisa
-RUN pip install --no-cache-dir --upgrade pip && \
-    pip install --no-cache-dir \
-    fastapi \
-    uvicorn[standard] \
-    pydantic-settings \
-    sqlalchemy \
-    asyncpg \
-    python-dotenv \
-    passlib[bcrypt] \
-    python-jose[cryptography]
+# Instalar dependências
+RUN pip install --no-cache-dir -r requirements.txt
 
-# Copia todo o código
+# Copiar o restante do código
 COPY . .
 
-# Comando para rodar — o Render sobrescreve a porta automaticamente
+# Expor a porta usada pelo Render
+EXPOSE 8000
+
+# Aqui estou supondo que é FastAPI com Uvicorn
 CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
