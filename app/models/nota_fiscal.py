@@ -42,6 +42,10 @@ class NotaFiscal(Base):
     desc_motivo = Column(String, nullable=True)
     codigo_lista_servico = Column(String, nullable=True)
     
+    id_api = Column(String, nullable=True)
+    link_api_pdf = Column(String, nullable=True)
+    link_api_xml = Column(String, nullable=True)
+    
     # Relacionamentos
     usuario = relationship("Usuario", back_populates="notas_fiscais")
     cliente = relationship("Cliente", back_populates="notas_fiscais", lazy="selectin")

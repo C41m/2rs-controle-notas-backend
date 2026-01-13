@@ -24,6 +24,9 @@ class NotaFiscal(BaseModel):
     desc_cnae: Optional[str] = None
     desc_motivo: Optional[str] = None
     codigo_lista_servico: Optional[str] = None
+    id_api: Optional[str] = None
+    link_api_pdf: Optional[str] = None
+    link_api_xml: Optional[str] = None
 
 
 class NotaFiscalCreate(BaseModel):
