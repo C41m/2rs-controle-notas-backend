@@ -113,7 +113,7 @@ async def get_users(
         )
 
     usuarios = await db.scalars(
-        select(Usuario)
+        select(Usuario).where(Usuario.role_id != 1)
         .options(selectinload(Usuario.atividades))
         .offset(skip)
         .limit(limit)
